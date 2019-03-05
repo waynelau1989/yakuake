@@ -45,6 +45,8 @@ WindowSettings::WindowSettings(QWidget* parent) : QWidget(parent)
     connect(kcfg_Height, SIGNAL(valueChanged(int)), this, SLOT(updateHeightSlider(int)));
     connect(heightSlider, SIGNAL(valueChanged(int)), this, SLOT(updateHeightSpinBox(int)));
 
+    connect(kcfg_HeightOffset, SIGNAL(valueChanged(int)), this, SLOT(updateHeightOffset(int)));
+
     connect(kcfg_Frames, SIGNAL(valueChanged(int)), this, SLOT(updateFramesSpinBox(int)));
     connect(framesSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateFramesSlider(int)));
 
@@ -61,7 +63,7 @@ void WindowSettings::updateWidthSlider(int width)
 {
     widthSlider->setValue(width/10);
 
-    emit updateWindowGeometry(width, kcfg_Height->value(), kcfg_Position->value());
+    emit updateWindowGeometry(width, kcfg_Height->value(), kcfg_HeightOffset->value(), kcfg_Position->value());
 }
 
 void WindowSettings::updateWidthSpinBox(int width)
@@ -73,12 +75,17 @@ void WindowSettings::updateHeightSlider(int height)
 {
     heightSlider->setValue(height/10);
 
-    emit updateWindowGeometry(kcfg_Width->value(), height, kcfg_Position->value());
+    emit updateWindowGeometry(kcfg_Width->value(), height, kcfg_HeightOffset->value(), kcfg_Position->value());
 }
 
 void WindowSettings::updateHeightSpinBox(int height)
 {
     kcfg_Height->setValue(height*10);
+}
+
+void WindowSettings::updateHeightOffset(int offset)
+{
+    emit updateWindowGeometry(kcfg_Width->value(), kcfg_Height->value(), offset, kcfg_Position->value());
 }
 
 void WindowSettings::updateFramesSlider(int speed)
@@ -93,5 +100,5 @@ void WindowSettings::updateFramesSpinBox(int speed)
 
 void WindowSettings::updatePosition(int position)
 {
-    emit updateWindowGeometry(kcfg_Width->value(), kcfg_Height->value(), position);
+    emit updateWindowGeometry(kcfg_Width->value(), kcfg_Height->value(), kcfg_HeightOffset->value(), position);
 }

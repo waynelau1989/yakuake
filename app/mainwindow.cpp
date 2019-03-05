@@ -754,8 +754,8 @@ void MainWindow::configureApp()
 
     WindowSettings* windowSettings = new WindowSettings(settingsDialog);
     settingsDialog->addPage(windowSettings, xi18nc("@title Preferences page name", "Window"), QStringLiteral("preferences-system-windows-move"));
-    connect(windowSettings, SIGNAL(updateWindowGeometry(int,int,int)),
-        this, SLOT(setWindowGeometry(int,int,int)));
+    connect(windowSettings, SIGNAL(updateWindowGeometry(int,int,int,int)),
+        this, SLOT(setWindowGeometry(int,int,int,int)));
 
     QWidget* behaviorSettings = new QWidget(settingsDialog);
     Ui::BehaviorSettings behaviorSettingsUi;
@@ -850,7 +850,7 @@ void MainWindow::applyWindowProperties()
 
 void MainWindow::applyWindowGeometry()
 {
-    int width, height;
+    int width, height, heightOffset;
 
     QAction* action = actionCollection()->action(QStringLiteral("view-full-screen"));
 
@@ -858,23 +858,27 @@ void MainWindow::applyWindowGeometry()
     {
         width = 100;
         height = 100;
+        heightOffset = 0;
     }
     else
     {
         width = Settings::width();
         height = Settings::height();
+        heightOffset = Settings::heightOffset();
     }
 
-    setWindowGeometry(width, height, Settings::position());
+    setWindowGeometry(width, height, heightOffset, Settings::position());
 }
 
-void MainWindow::setWindowGeometry(int newWidth, int newHeight, int newPosition)
+void MainWindow::setWindowGeometry(int newWidth, int newHeight, int heightOffset, int newPosition)
 {
     QRect workArea = getDesktopGeometry();
 
     int maxHeight = workArea.height() * newHeight / 100;
 
     int targetWidth = workArea.width() * newWidth / 100;
+
+    maxHeight += heightOffset;
 
     setGeometry(workArea.x() + workArea.width() * newPosition * (100 - newWidth) / 10000,
                 workArea.y(), targetWidth, maxHeight);
@@ -1391,12 +1395,12 @@ void MainWindow::setFullScreen(bool state)
     if (state)
     {
         setWindowState(windowState() | Qt::WindowFullScreen);
-        setWindowGeometry(100, 100, Settings::position());
+        setWindowGeometry(100, 100, 0, Settings::position());
     }
     else
     {
         setWindowState(windowState() & ~Qt::WindowFullScreen);
-        setWindowGeometry(Settings::width(), Settings::height(), Settings::position());
+        setWindowGeometry(Settings::width(), Settings::height(), Settings::heightOffset(), Settings::position());
     }
 }
 

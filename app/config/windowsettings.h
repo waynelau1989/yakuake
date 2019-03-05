@@ -36,7 +36,7 @@ class WindowSettings : public QWidget, private Ui::WindowSettings
 
 
     Q_SIGNALS:
-        void updateWindowGeometry(int width, int height, int position);
+        void updateWindowGeometry(int width, int height, int heightOffset, int position);
 
 
     private Q_SLOTS:
@@ -45,6 +45,8 @@ class WindowSettings : public QWidget, private Ui::WindowSettings
 
         void updateHeightSlider(int height);
         void updateHeightSpinBox(int height);
+
+        void updateHeightOffset(int offset);
 
         void updateFramesSlider(int height);
         void updateFramesSpinBox(int height);
