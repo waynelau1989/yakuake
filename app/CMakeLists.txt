@@ -12,6 +12,7 @@ set(yakuake_SRCS
     splitter.cpp
     firstrundialog.cpp
     visualeventoverlay.cpp
+    font_util.cpp
     config/windowsettings.cpp
     config/appearancesettings.cpp
     config/skinlistdelegate.cpp

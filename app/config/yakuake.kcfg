@@ -24,6 +24,11 @@
       <min>10</min>
       <max>100</max>
     </entry>
+    <entry name="FitHeightToTerm" type="Bool">
+      <label context="@label">Fit height to terminal</label>
+      <whatsthis context="@info:whatsthis">Fit height to terminal.</whatsthis>
+      <default>false</default>
+    </entry>
     <entry name="Position" type="Int">
       <label context="@label">Window position</label>
       <whatsthis context="@info:whatsthis">Center point of the application window, as a percentage, measured from the left-hand edge of the screen.</whatsthis>

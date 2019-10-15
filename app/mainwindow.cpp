@@ -31,6 +31,7 @@
 #include "terminal.h"
 #include "titlebar.h"
 #include "ui_behaviorsettings.h"
+#include "font_util.h"
 
 #include <KAboutData>
 #include <KConfigDialog>
@@ -55,6 +56,7 @@
 #include <QWindow>
 #include <QDBusConnection>
 #include <QPlatformSurfaceEvent>
+#include <QDebug>
 
 #if HAVE_X11
 #include <QX11Info>
@@ -881,6 +883,27 @@ void MainWindow::setWindowGeometry(int newWidth, int newHeight, int newPosition)
     int maxHeight = workArea.height() * newHeight / 100;
 
     int targetWidth = workArea.width() * newWidth / 100;
+
+    if (Settings::fitHeightToTerm()) {
+        int fontHeight = get_current_font_height();
+
+        qDebug() << "maxHeight:" << maxHeight;
+        qDebug() << "fontHeight:" << fontHeight;
+        qDebug() << "tabBarHeight:" << m_tabBar->height();
+        qDebug() << "titleBarHeight:" << m_titleBar->height();
+
+        int extraHeight;
+        if (0 == fontHeight) {
+            qDebug() << "Get current font height failed!\n";
+            extraHeight = 0;
+        } else {
+            extraHeight = (maxHeight - m_tabBar->height() - m_titleBar->height() - 2) % fontHeight;
+        }
+
+        qDebug() << "extraHeight:" << extraHeight;
+
+        maxHeight -= extraHeight;
+    }
 
     setGeometry(workArea.x() + workArea.width() * newPosition * (100 - newWidth) / 10000,
                 workArea.y(), targetWidth, maxHeight);
